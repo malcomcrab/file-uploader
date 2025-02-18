@@ -8,7 +8,7 @@ async function toe() {
   console.log(allUsers)
 }
 
-async function main(username, password) {
+async function createNewUser(username, password) {
   await prisma.users.create({
     data: {
       username: username,
@@ -33,7 +33,11 @@ async function deleteUsers(username){
 }
 
   module.exports = {
-    main,
+    createNewUser,
     toe,
     deleteUsers
   }
+
+
+  
+   
