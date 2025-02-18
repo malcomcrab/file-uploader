@@ -1,6 +1,8 @@
 const queries = require("../queries")
- // This just shows the new stuff we're adding to the existing contents
- const { body, validationResult } = require("express-validator");
+const session = require("express-session");
+const passport = require("passport");
+const { body, validationResult } = require("express-validator");
+const LocalStrategy = require('passport-local').Strategy;
 
  const alphaErr = "must only contain letters.";
  const lengthErr = "must be between 1 and 10 characters.";
@@ -14,9 +16,8 @@ const queries = require("../queries")
      .isLength({ min: 1, max: 10 }).withMessage(`Password ${lengthErr}`),
  ];
  
- // We can pass an entire array of middleware validations to our controller.
- 
-exports.createUser = [
+
+const createUser = [
     validateUser,
     (req, res) => {   
         const errors = validationResult(req);
@@ -26,11 +27,71 @@ exports.createUser = [
             errors: errors.array(),
           });
         } 
-        const {username,password} = req.body
-        queries.createNewUser(username, password);
-        res.redirect("/");
+        try {
+            const {username,password} = req.body
+            queries.createNewUser(username, password);
+            res.redirect("/");
+           } catch (error) {
+              console.error(error);
+              next(error);
+             }
+        
     }
 ]
 
- 
- 
+passport.use(
+    new LocalStrategy(async (username, password, done) => {
+      try {
+       const user = await queries.getUserByUsername(username)
+        
+  
+        if (!user) {
+          return done(null, false, { message: "Incorrect username" });
+        }
+        const match = await bcrypt.compare(password, user.password);
+if (!match) {
+  // passwords do not match!
+  return done(null, false, { message: "Incorrect password" })
+}
+
+        return done(null, user);
+      } catch(err) {
+        return done(err);
+      }
+    })
+  );
+  
+  passport.serializeUser((user, done) => {
+    done(null, user.id);
+  });
+
+  passport.deserializeUser(async (id, done) => {
+
+    try {
+      const user = await queries.getUserById(id)
+      done(null, user);
+    } catch (err) {
+      done(err);
+    }
+  });
+  
+  async function userLogIn(){
+      passport.authenticate("local", {
+      successRedirect: "/",
+      failureRedirect: "/"
+    })
+  };
+  
+  
+
+// async function userLogIn(req,res){
+//     const username = req.body.username
+//     const user = await queries.getUserById(username)
+//     console.log(user)
+//     res.redirect("/")
+// }
+
+module.exports = {
+    userLogIn,
+    createUser
+}

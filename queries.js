@@ -1,18 +1,38 @@
 const { PrismaClient } = require('@prisma/client')
-
+const bcrypt = require("bcryptjs")
 const prisma = new PrismaClient()
 
-async function toe() {
+async function getAllUsers() {
   // ... you will write your Prisma Client queries here
   const allUsers = await prisma.users.findMany()
   console.log(allUsers)
 }
 
+async function getUserByUsername(username) {
+  const user = await prisma.users.findUnique({
+    where: {
+      username: username,
+    },
+  })
+  return(user)
+}
+
+
+async function getUserById(id) {
+  const user = await prisma.users.findUnique({
+    where: {
+      id: id,
+    },
+  })
+  return(user)
+}
+
 async function createNewUser(username, password) {
+  const hashedPassword = await bcrypt.hash(password, 10);
   await prisma.users.create({
     data: {
       username: username,
-      password: password,
+      password: hashedPassword,
     },
   })
 
@@ -34,7 +54,9 @@ async function deleteUsers(username){
 
   module.exports = {
     createNewUser,
-    toe,
+    getUserByUsername,
+    getUserById,
+    getAllUsers,
     deleteUsers
   }
 
