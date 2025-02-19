@@ -5,8 +5,11 @@ const path = require("node:path");
 const express = require("express");
 const session = require("express-session");
 const passport = require("passport");
-
+const multer  = require('multer')
+const upload = multer({ dest: 'uploads/' })
 const app = express();
+
+
 app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "ejs");
 
@@ -17,7 +20,12 @@ app.use(express.urlencoded({ extended: false }));
 app.use("/", indexRouter);
 app.use("/users", usersRouter);
 
-
+app.post("/upload", upload.single('file'), function (req,res,next) {
+    const fileone = req.file
+    const body = req.body.title
+    console.log(body,fileone)
+    res.redirect("/")
+})
 
 app.listen(3000, () => console.log("app listening on port 3000!"));
 

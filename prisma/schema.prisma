@@ -17,8 +17,9 @@ model users {
 
 model file {
   id         Int      @id @default(autoincrement())
-  author     users    @relation(fields: [authorId], references: [id])
-  uploadedAt DateTime @default(now())
   title      String
+  author     users    @relation(fields: [authorId], references: [id])
+  url        String   @unique
+  uploadedAt DateTime @default(now())
   authorId   Int  
 }
