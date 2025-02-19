@@ -3,6 +3,7 @@ const session = require("express-session");
 const passport = require("passport");
 const { body, validationResult } = require("express-validator");
 const LocalStrategy = require('passport-local').Strategy;
+const bcrypt = require("bcryptjs")
 
  const alphaErr = "must only contain letters.";
  const lengthErr = "must be between 1 and 10 characters.";
@@ -75,23 +76,18 @@ if (!match) {
     }
   });
   
-  async function userLogIn(){
-      passport.authenticate("local", {
-      successRedirect: "/",
-      failureRedirect: "/"
-    })
+
+async function logOutUser(req, res, next){
+    req.logout((err) => {
+      if (err) {
+        return next(err);
+      }
+      res.redirect("/");
+    });
   };
   
-  
-
-// async function userLogIn(req,res){
-//     const username = req.body.username
-//     const user = await queries.getUserById(username)
-//     console.log(user)
-//     res.redirect("/")
-// }
 
 module.exports = {
-    userLogIn,
-    createUser
+    createUser,
+    logOutUser
 }
