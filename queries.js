@@ -52,12 +52,32 @@ async function deleteUsers(username){
 })
 }
 
+async function addFile(id){
+  await prisma.users.update({
+    where: {
+      id: id,
+    },
+    data: {
+      files: {
+        create: {
+          title: 'My first post'
+        },
+      },
+    },
+    include: {
+      files: true,
+    },
+  })
+} 
+
+
   module.exports = {
     createNewUser,
     getUserByUsername,
     getUserById,
     getAllUsers,
-    deleteUsers
+    deleteUsers,
+    addFile
   }
 
 
