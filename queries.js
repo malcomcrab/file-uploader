@@ -94,11 +94,11 @@ async function createFolder(id, title){
   })
 }
 
-async function addFileAndFolder(id, folder){
+async function addFileAndFolder(id, folder, url, title){
   await prisma.file.create({
     data: {
-        title: 'How to make croissants',
-        url: 'a URL',
+        title: title,
+        url: url,
         author: {
           connect: {
             id: id,

@@ -1,6 +1,7 @@
 require('dotenv').config();
 const indexRouter = require("./routes/indexRouter")
 const usersRouter = require("./routes/usersRouter")
+const storageRouter = require("./routes/storageRouter")
 const path = require("node:path");
 const express = require("express");
 const session = require("express-session");
@@ -19,13 +20,8 @@ app.use(express.urlencoded({ extended: false }));
 
 app.use("/", indexRouter);
 app.use("/users", usersRouter);
+app.use("/storage", storageRouter)
 
-app.post("/upload", upload.single('file'), function (req,res,next) {
-    const fileone = req.file
-    const body = req.body.title
-    console.log(body,fileone)
-    res.redirect("/")
-})
 
 app.listen(3000, () => console.log("app listening on port 3000!"));
 
