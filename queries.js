@@ -58,18 +58,69 @@ async function addFile(id){
       id: id,
     },
     data: {
-      files: {
+      file: {
         create: {
-          title: 'My first post'
+          title: "My first post",
+          url: "URL",
+          folders: {
+            connect:{
+              id: 1
+            },
+          },
         },
       },
     },
     include: {
-      files: true,
+      file: true,
     },
   })
 } 
 
+async function createFolder(id, title){
+  await prisma.users.update({
+    where: {
+      id: id,
+    },
+    data: {
+      folder: {
+        create: {
+          folder_name: title
+        },
+      },
+    },
+    include: {
+      folder: true,
+    }
+  })
+}
+
+async function addFileAndFolder(id, folder){
+  await prisma.file.create({
+    data: {
+        title: 'How to make croissants',
+        url: 'a URL',
+        author: {
+          connect: {
+            id: id,
+          },
+        },
+        folders: {
+          connectOrCreate: {
+            where: {
+            folder_name: folder
+          },
+          create: {
+            owner_id: id,
+            folder_name: folder,
+          },
+        },
+      },
+  },
+  include: {
+    folders: true,
+  },
+})
+}
 
   module.exports = {
     createNewUser,
@@ -77,7 +128,9 @@ async function addFile(id){
     getUserById,
     getAllUsers,
     deleteUsers,
-    addFile
+    addFile,
+    createFolder,
+    addFileAndFolder,
   }
 
 
