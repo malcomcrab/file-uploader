@@ -9,6 +9,15 @@ async function postFile(req,res,next) {
     res.redirect("/")
 }
 
+async function createEmptyFolder(req, res) {
+    const folderTitle = req.body.folderTitle
+    const user = req.user
+    console.log(folderTitle)
+    res.redirect("/")
+    await queries.createFolder(user.id, folderTitle)
+}
+
 module.exports = {
-    postFile
+    postFile,
+    createEmptyFolder
 }
