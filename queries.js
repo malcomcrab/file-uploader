@@ -3,7 +3,6 @@ const bcrypt = require("bcryptjs")
 const prisma = new PrismaClient()
 
 async function getAllUsers() {
-  // ... you will write your Prisma Client queries here
   const allUsers = await prisma.users.findMany()
   console.log(allUsers)
 }
@@ -16,7 +15,6 @@ async function getUserByUsername(username) {
   })
   return(user)
 }
-
 
 async function getUserById(id) {
   const user = await prisma.users.findUnique({
@@ -35,11 +33,9 @@ async function createNewUser(username, password) {
       password: hashedPassword,
     },
   })
-
-  const allUsers = await prisma.users.findMany({
-   
+    const allUsers = await prisma.users.findMany({
   })
-  console.dir(allUsers, { depth: null })
+    console.dir(allUsers, { depth: null })
 }
 
 async function deleteUsers(username){
@@ -51,30 +47,6 @@ async function deleteUsers(username){
   },
 })
 }
-
-async function addFile(id){
-  await prisma.users.update({
-    where: {
-      id: id,
-    },
-    data: {
-      file: {
-        create: {
-          title: "My first post",
-          url: "URL",
-          folders: {
-            connect:{
-              id: 1
-            },
-          },
-        },
-      },
-    },
-    include: {
-      file: true,
-    },
-  })
-} 
 
 async function createFolder(id, title){
   await prisma.users.update({
@@ -128,7 +100,6 @@ async function addFileAndFolder(id, folder, url, title){
     getUserById,
     getAllUsers,
     deleteUsers,
-    addFile,
     createFolder,
     addFileAndFolder,
   }
