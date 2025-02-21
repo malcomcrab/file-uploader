@@ -112,6 +112,18 @@ async function deleteSingleFolder(id, folderName){
   })
 }
 
+async function updateSingleFolder(id, folderName, newName){
+  await prisma.folder.update({
+    where:{
+      folder_name: folderName,
+      owner_id: id,
+    },
+    data: {
+      folder_name: newName,
+    }
+  })
+}
+
   module.exports = {
     createNewUser,
     getUserByUsername,
@@ -121,7 +133,8 @@ async function deleteSingleFolder(id, folderName){
     createFolder,
     addFileAndFolder,
     getFoldersByUserId,
-    deleteSingleFolder
+    deleteSingleFolder,
+    updateSingleFolder
 
   }
 
