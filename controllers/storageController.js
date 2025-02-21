@@ -25,8 +25,17 @@ async function deleteFolder(req, res) {
    res.redirect("/")
 }
 
+async function updateFolder(req, res ) {
+    const { folderName, newName } = req.body
+    const userId = req.user.id
+    console.log(userId, folderName, newName)
+    await queries.updateSingleFolder(userId, folderName, newName)
+    res.redirect("/")
+}
+
 module.exports = {
     postFile,
     createEmptyFolder,
-    deleteFolder
+    deleteFolder,
+    updateFolder
 }
