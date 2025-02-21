@@ -94,6 +94,24 @@ async function addFileAndFolder(id, folder, url, title){
 })
 }
 
+async function getFoldersByUserId(id){
+   const usersFolders = await prisma.folder.findMany({
+      where: {
+        owner_id: id,
+    },
+  })
+  return usersFolders
+}
+
+async function deleteSingleFolder(id, folderName){
+  await prisma.folder.delete({
+    where: {
+      folder_name: folderName,
+      owner_id: id,
+    },
+  })
+}
+
   module.exports = {
     createNewUser,
     getUserByUsername,
@@ -102,6 +120,9 @@ async function addFileAndFolder(id, folder, url, title){
     deleteUsers,
     createFolder,
     addFileAndFolder,
+    getFoldersByUserId,
+    deleteSingleFolder
+
   }
 
 

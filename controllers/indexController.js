@@ -1,17 +1,24 @@
 const queries = require("../queries")
 
-
-exports.renderIndex = (req, res) => {
+async function renderIndex(req, res) {
   const user = req.user
   if(user){
-   
+    const userFolders = await queries.getFoldersByUserId(user.id)
+    res.render("index", { user: user, userFolders: userFolders })
+  } else{
+    res.render("index", { user: user, userFolders: [] })
   }
-  res.render("index", { user: req.user })
+    
 };
 
-exports.renderSignUp = (req, res) => {
+
+
+async function renderSignUp (req, res) {
   res.render("signUpPage");
 }
 
-
+module.exports = { 
+  renderIndex,
+  renderSignUp,
+}
 

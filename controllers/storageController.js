@@ -17,7 +17,16 @@ async function createEmptyFolder(req, res) {
     await queries.createFolder(user.id, folderTitle)
 }
 
+async function deleteFolder(req, res) {
+    const folderName = req.params.folder
+    const userId = req.user.id
+    console.log(userId, folderName)
+    await queries.deleteSingleFolder(userId, folderName)
+   res.redirect("/")
+}
+
 module.exports = {
     postFile,
-    createEmptyFolder
+    createEmptyFolder,
+    deleteFolder
 }
